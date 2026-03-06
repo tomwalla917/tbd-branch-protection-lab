@@ -7,7 +7,10 @@ test('GET / returns welcome message', async () => {
   const response = await request(app).get('/');
 
   assert.equal(response.status, 200);
-  assert.equal(response.body.message, 'Welcome to the starter Node workflow API!');
+  assert.equal(
+    response.body.message,
+    'Welcome to the starter Node workflow API!'
+  );
 });
 
 test('GET /health returns API status', async () => {

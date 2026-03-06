@@ -1,27 +1,21 @@
 const express = require('express');
 
-// Create our Express application.
+// Create app instance.
 const app = express();
 
-// Parse JSON request bodies.
 app.use(express.json());
 
-// Basic welcome route.
+// TODO (student): Remove this unused variable to satisfy ESLint.
+// const unusedValue = 'remove me';
+
+// Intro route.
 app.get('/', (_req, res) => {
-  res.status(200).json({
-    message: 'Welcome to the starter Node workflow API!'
-  });
+  res.status(200).json({ message: 'Welcome to the starter lint/format API' });
 });
 
-// TODO: Add GET /health route.
-// It should return status 200 and this JSON body:
-// { status: 'ok', service: 'node-workflow-demo' }
-
+// Health route.
 app.get('/health', (_req, res) => {
-  res.status(200).json({
-    "status": "ok",
-    "service": "node-workflow-demo"
-  });
+  res.status(200).json({ status: 'ok' });
 });
 
 module.exports = app;
