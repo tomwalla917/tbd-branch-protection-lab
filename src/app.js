@@ -1,24 +1,31 @@
 const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { schema, root } = require('./graphql/schema');
 
-// Create app instance.
 const app = express();
 
 app.use(express.json());
 
-// TODO (student): Remove this unused variable to satisfy ESLint.
-// const unusedValue = 'remove me';
-
-// Intro route.
 app.get('/', (_req, res) => {
-  res.status(200).json({ message: 'Welcome to the starter lint/format API' });
+  res.status(200).json({
+    message: 'Welcome to dependency auditing starter API'
+  });
 });
 
-// Health route.
 app.get('/health', (_req, res) => {
-  res.status(200).json({ status: 'ok' });
+  res.status(200).json({
+    status: 'ok',
+    checks: ['npm-audit', 'snyk', 'cypress']
+  });
 });
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema,
+    rootValue: root,
+    graphiql: true
+  })
+);
 
 module.exports = app;
-
-//snyk feature 
-//snyk featuree
