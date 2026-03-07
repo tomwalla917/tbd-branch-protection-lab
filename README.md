@@ -1,84 +1,124 @@
-# Lab: Dependency Auditing with `npm audit` + Snyk (Starter)
+# Lab: Publish a Docker Image to GHCR (Starter)
 
 ## Objective
 
-Add dependency security gates to CI while testing a simple Express + GraphQL + Mongoose API with Cypress.
+Complete a starter Node + Express + GraphQL + Mongoose + Cypress API and configure GitHub Actions to push a Docker image to GitHub Container Registry (GHCR).
 
-You will:
+By the end of this lab, you will:
 
-1. Run dependency and API checks locally
-2. Complete CI workflow steps for audit + Snyk
-3. Open a pull request and verify checks run
+1. Complete missing API routes
+2. Run Cypress API tests locally
+3. Build a Docker image
+4. Complete a GHCR workflow in `.github/workflows/ghcr.yml`
 
 ---
 
-## Step 1: Install dependencies
+## Step 1: Install and Run Tests
 
 ```bash
 npm install
-```
-
----
-
-## Step 2: Run local checks
-
-```bash
-npm run lint
-npm run format:check
-npm run audit
 npm test
 ```
 
-Expected behavior:
+Expected result in Starter: tests fail until TODO routes are completed.
 
-- `npm run audit` completes (or reports vulnerabilities)
-- Cypress tests run against REST + GraphQL routes
+### Checkpoint 1
 
----
-
-## Step 3: Complete pipeline workflow
-
-Open `.github/workflows/security-audit.yml`.
-
-Make sure these checks run on PRs to `main`:
-
-1. `npm run lint`
-2. `npm run format:check`
-3. `npm run audit`
-4. `npm test`
-5. Snyk action with `SNYK_TOKEN`
-
-Add repository secret:
-
-- `SNYK_TOKEN`
+- [ ] Dependencies installed
+- [ ] You ran tests and saw current failures
 
 ---
 
-## Step 4: Validate GraphQL behavior
+## Step 2: Complete API TODOs in `src/app.js`
 
-Confirm Cypress tests include:
+Implement:
 
-- GraphQL query for `books`
-- GraphQL mutation `addBook`
+1. `GET /health` returning:
 
-These tests should pass with `npm test`.
+```json
+{
+  "status": "ok",
+  "service": "ghcr-demo-api"
+}
+```
+
+2. GraphQL endpoint at `/graphql` using `graphqlHTTP`
+
+Run tests again:
+
+```bash
+npm test
+```
+
+### Checkpoint 2
+
+- [ ] `/health` route implemented
+- [ ] `/graphql` route mounted
+- [ ] Cypress tests pass locally
 
 ---
 
-## Step 5: Open PR and verify checks
+## Step 3: Build and Run the Docker Image
 
-1. Create feature branch.
-2. Commit changes.
-3. Push and open PR to `main`.
-4. Confirm workflow checks run and pass.
+```bash
+docker build -t ghcr-demo-api:local .
+docker run --rm -p 3000:3000 ghcr-demo-api:local
+```
+
+Verify:
+
+```bash
+curl http://localhost:3000/health
+```
+
+### Checkpoint 3
+
+- [ ] Local image builds
+- [ ] Container responds on port 3000
 
 ---
 
-## Completion Checklist
+## Step 4: Complete GHCR Workflow TODOs
 
-- [ ] `npm run lint` and `npm run format:check` are configured and run
-- [ ] `npm run audit` is configured and runs
-- [ ] Cypress API tests pass
-- [ ] Snyk step is present in workflow
-- [ ] `SNYK_TOKEN` documented/added
-- [ ] PR checks are green
+Open `.github/workflows/ghcr.yml` and complete TODO 3–5:
+
+- Add `docker/login-action@v3`
+- Add `docker/metadata-action@v5`
+- Add `docker/build-push-action@v6`
+
+Workflow requirements:
+
+- Trigger on push to `main`
+- Push image to `ghcr.io/<owner>/ghcr-demo-api`
+- Publish both `latest` and `sha` tags
+
+### Checkpoint 4
+
+- [ ] Workflow includes login action
+- [ ] Workflow includes metadata action
+- [ ] Workflow includes build-push action
+
+---
+
+## Step 5: Push and Verify on GitHub
+
+1. Commit your completed changes
+2. Push to `main`
+3. Open GitHub **Actions** tab
+4. Verify workflow **Build and Push GHCR Image** passes
+5. Open GitHub **Packages** and find your image
+
+### Checkpoint 5
+
+- [ ] Actions workflow run is green
+- [ ] GHCR image appears under Packages
+
+---
+
+## Reflection
+
+Answer briefly:
+
+1. Why is `packages: write` required in workflow permissions?
+2. Why do teams publish both `latest` and `sha` tags?
+3. What is the difference between manual `docker push` and workflow-based push?

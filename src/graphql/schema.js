@@ -1,7 +1,7 @@
 const { buildSchema } = require('graphql');
 const Book = require('../models/book');
 
-const books = [{ id: '1', title: 'Secure Dependencies', author: 'Instructor' }];
+const books = [{ id: '1', title: 'Starter Seed Book', author: 'Instructor' }];
 
 const schema = buildSchema(`
   type Book {
@@ -31,12 +31,7 @@ const root = {
       throw new Error('Invalid book payload');
     }
 
-    const created = {
-      id: String(books.length + 1),
-      title,
-      author
-    };
-
+    const created = { id: String(books.length + 1), title, author };
     books.push(created);
     return created;
   }
